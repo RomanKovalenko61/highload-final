@@ -1,0 +1,43 @@
+# Binaries
+highload-service
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.html
+
+# Dependency directories
+vendor/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Docker
+.docker/
+
+# Kubernetes
+*.kubeconfig
+
+# Temporary files
+tmp/
+temp/
+/tmp
+

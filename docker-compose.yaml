@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: highload-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  highload-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: highload-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_PORT=8080
+      - REDIS_ADDR=redis:6379
+      - REDIS_PASSWORD=
+      - REDIS_DB=0
+      - WINDOW_SIZE=50
+      - ANOMALY_THRESHOLD=2.0
+      - METRICS_RETENTION_HOURS=1
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: highload-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    depends_on:
+      - highload-service
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: highload-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  redis-data:
+  prometheus-data:
+  grafana-data:
+

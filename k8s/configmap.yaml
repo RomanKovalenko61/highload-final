@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: highload-service-config
+  namespace: default
+data:
+  SERVER_PORT: "8080"
+  REDIS_ADDR: "redis-service:6379"
+  REDIS_DB: "0"
+  WINDOW_SIZE: "50"
+  ANOMALY_THRESHOLD: "2.0"
+  METRICS_RETENTION_HOURS: "1"
+
