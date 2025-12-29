@@ -80,7 +80,7 @@ func (a *Analyzer) AddMetric(data MetricData) {
 	select {
 	case a.metricsChan <- data:
 	default:
-		// Канал полон, пропускаем метрику
+		// Если канал полон, пропускаем метрику
 	}
 }
 

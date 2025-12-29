@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: highload-service-ingress
   namespace: default
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
@@ -25,4 +23,3 @@ spec:
             name: highload-service
             port:
               number: 8080
-
